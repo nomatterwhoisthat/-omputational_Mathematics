@@ -1,0 +1,130 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+const double eps1 = pow(10, -6) / 3.057;
+const double eps2 = pow(10, -6) / 3.057;
+const double eps3 = pow(10, -6) / 3;
+
+double sin(double x, double accuracy) {
+    double term = x;
+    double sum = term;
+
+    for (int i = 1; std::abs(term) >= accuracy; ++i) {
+        term = (-1) * term * x * x / ((2 * i) * (2 * i + 1));
+        sum += term;
+    }
+
+    return sum;
+}
+
+double cos(double x, double accuracy) {
+    double term = 1;
+    double sum = term;
+
+    for (int i = 1; std::abs(term) >= accuracy; ++i) {
+        term = (-1) * term * x * x / ((2 * i - 1) * (2 * i));
+        sum += term;
+    }
+
+    return sum;
+}
+
+
+double sqrt(double x, double accuracy) {
+    double z = std::max(x, 1.0);
+
+    while (std::abs(z * z - x) >= accuracy) {
+        z = (z + x / z) / 2;
+    }
+
+    return z;
+}
+
+void calculate(double start, double end, double step) {
+    for (double i = start; i <= end + step; i += step) {
+        double my_calc = sqrt(1 + i * i ,eps3)*(sin(3 * i + 0.1,eps1) + cos(2 * i + 0.3,eps2));
+        double stand_calc = std::sqrt(1 + pow(i, 2)) * (std::sin(3 * i + 0.1) + std::cos(2 * i + 0.3));
+        double err = std::abs(my_calc - stand_calc);
+        std::cout << std::setprecision(10)<<"step = " << i << '\t' << "| my_calc = " << my_calc << '\t' << "| stand_calc = " << stand_calc << '\t' <<"| error = "<< err << '\n';
+
+    }
+}
+
+int main() {
+    calculate(0.2, 0.3, 0.01);
+    return 0;
+}
+//
+//package main
+//
+//import (
+//	"fmt"
+//	"math"
+//	)
+//
+//	var(
+//		eps1 = math.Pow10(-6) / 3.057
+//		eps2 = math.Pow10(-6) / 3.057
+//		eps3 = math.Pow10(-6) / 3
+//	)
+//
+//	func sin(x float64, accuracy float64) float64 {
+//	// Start with the first term of the power series
+//term: = x
+//sum : = term
+//
+//// Keep calculating terms until the accuracy is reached
+//for i : = 1; math.Abs(term) >= accuracy; i++ {
+//	// Calculate the next term of the power series
+//	term = (-1) * term * x * x / float64((2 * i) * (2 * i + 1))
+//
+//		// Add the term to the sum
+//		sum += term
+//}
+//
+//return sum
+//}
+//
+//func cos(x float64, accuracy float64) float64 {
+//	// Start with the first term of the power series
+//term: = 1.0
+//sum : = term
+////fact := 1.0
+//
+//// Keep calculating terms until the accuracy is reached
+//for i : = 1; math.Abs(term) >= accuracy; i++ {
+//	// Calculate the next term of the power series
+//	term = (-1) * term * x * x / float64((2 * i - 1) * (2 * i))
+//
+//		// Add the term to the sum
+//		sum += term
+//}
+//
+//return sum
+//}
+//
+//func sqrt(x float64, accuracy float64) float64 {
+//z: = math.Max(x, 1)
+//
+//// Keep refining the guess until the desired accuracy is reached
+//for math.Abs(z * z - x) >= accuracy{
+//	// Use the Geron formula to refine the guess
+//	z = (z + x / z) / 2
+//}
+//
+//return z
+//}
+//
+//func calculate(start, end, step float64) {
+//	for i : = start; i <= end + step; i += step{
+//		my_calc: = sqrt(1 + math.Pow(i, 2), eps3) * (sin(3 * i + 0.1, eps1) + cos(2 * i + 0.3, eps2))
+//		stand_calc : = math.Sqrt(1 + math.Pow(i, 2)) * (math.Sin(3 * i + 0.1) + math.Cos(2 * i + 0.3))
+//		err : = math.Abs(my_calc - stand_calc)
+//		fmt.Printf("step = %.2g\t| my_calc = %.12g \t| stand_calc = %.12g\t| error = %.10g\n", i, my_calc, stand_calc, err)
+//	}
+//}
+//
+//func main() {
+//	calculate(0.2, 0.3, 0.01)
+//}
